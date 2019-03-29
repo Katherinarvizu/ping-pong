@@ -18,17 +18,25 @@ var rigthPressed = false;
 var leftPressed = false;
 
 //agregar eventos de precionado y soltado de teclas
-document.addEvenListener("keydown", keyUpHandler, false);
-document.addEvenListener("keyUp", keyUpHandler, false);
+document.addEventListener("keydown", keyDownHandler, false);
+document.addEventListener("keyUp", keyUpHandler, false);
 
 //Esta funcion si se preciona una teclas
-function keyDownHandler(){
-
+function keyDownHandler(event){
+  if (event.keyCode == 39) {
+    rigthPressed = true;
+  } else if (event.keyCode == 37) {
+    leftPressed = true;
+  }
 }
 
 //Esta funcion determina si se suelta una teclas
-function keyUpHandler(){
-
+function keyUpHandler(event){
+  if (event.keyCode == 39) {
+    rigthPressed = false;
+  } else if (event.keyCode == 37) {
+    leftPressed = false;
+  }
 }
 
 //esta funcion dibuja una paleta
@@ -46,7 +54,7 @@ function drawBall(){
   context.arc(x, y, ballRadius, 0, Math.PI*2);
   context.fillStyle = "#0095DD";
   context.fill();
-  context.closePath()
+  context.closePath();
 }
 
 function draw(){
