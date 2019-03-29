@@ -11,29 +11,29 @@ var ballRadius = 10;
 //paleta
 var paddleHeight = 10;
 var paddleWidth = 75;
-var paddleX = (canvas.width - paddleWidth)/2;
+var paddleX = (canvas.width - paddleWidth) / 2;
 
 //DEctar las teclas direccionales de la izquierda y derecha
-var rigthPressed = false;
+var rightPressed = false;
 var leftPressed = false;
 
 //agregar eventos de precionado y soltado de teclas
 document.addEventListener("keydown", keyDownHandler, false);
-document.addEventListener("keyUp", keyUpHandler, false);
+document.addEventListener("keyup", keyUpHandler, false);
 
 //Esta funcion si se preciona una teclas
-function keyDownHandler(event){
+function keyDownHandler(event) {
   if (event.keyCode == 39) {
-    rigthPressed = true;
+    rightPressed = true;
   } else if (event.keyCode == 37) {
     leftPressed = true;
   }
 }
 
 //Esta funcion determina si se suelta una teclas
-function keyUpHandler(event){
+function keyUpHandler(event) {
   if (event.keyCode == 39) {
-    rigthPressed = false;
+    rightPressed = false;
   } else if (event.keyCode == 37) {
     leftPressed = false;
   }
@@ -49,7 +49,7 @@ function drawPaddle() {
 }
 
 //Esta function para el circulo de x. y
-function drawBall(){
+function drawBall() {
   context.beginPath();
   context.arc(x, y, ballRadius, 0, Math.PI*2);
   context.fillStyle = "#0095DD";
@@ -57,24 +57,31 @@ function drawBall(){
   context.closePath();
 }
 
-function draw(){
+function draw() {
   context.clearRect(0, 0, canvas.width, canvas.height);
 
-//se llama la function de dibujar un circulo
-drawBall();
+  //se llama la function de dibujar un circulo
+  drawBall();
 
-//se llama la funcion de dibujar una paleta
-drawPaddle();
+  //se llama la funcion de dibujar una paleta
+  drawPaddle();
 
 //verificar si llego al limite de arriba/abajo.
   if(y + dy < 0 || y + dy > canvas.height) {
     dy = -dy;
   }
 
-//verificar si llego al limite de la izquierda/derecho.
-if(x + dx < 0 || x + dx > canvas.width) {
-  dx = -dx;
-}
+  //verificar si llego al limite de la izquierda/derecho.
+  if(x + dx < 0 || x + dx > canvas.width) {
+    dx = -dx;
+  }
+
+  //verificar si se toco la tecla direccional derecha
+  if (rightPressed && paddleX < canvas.width - paddleWidth) {
+    paddleX += 7;
+  } else if (leftPressed && paddleX > 0) {
+    paddleX -=7;
+  }
 
   x += dx;
   y += dy;
