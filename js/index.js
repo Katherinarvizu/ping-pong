@@ -17,6 +17,14 @@ var paddleX = (canvas.width - paddleWidth) / 2;
 var rightPressed = false;
 var leftPressed = false;
 
+var brickRowCount = 3;
+var brickColumnCount = 5;
+var brickWidth = 75;
+var brickHeight = 20;
+var brickPadding = 10;
+var brickOffsetTop = 30;
+var brickOffsetLeft = 30;
+
 //agregar eventos de precionado y soltado de teclas
 document.addEventListener("keydown", keyDownHandler, false);
 document.addEventListener("keyup", keyUpHandler, false);
@@ -48,6 +56,23 @@ function drawPaddle() {
   context.closePath();
 }
 
+function drawBricks(){
+  for (var row = 0; row < brickRowCount; row++) {
+    for (var column = 0; column < brickColumnCount; column++) {
+    var brickX = (column*(brickWidth + brickPadding)) + brickOffsetLeft;
+    var brickY  = (row*(brickHeight + brickPadding)) + brickOffsetTop;
+
+    // dibujar un bloque
+
+    context.beginPath();
+    context.rect(brickX, brickY, brickWidth, brickHeight);
+    context.fillStyle = "#0095DD";
+    context.fill();
+    context.closePath();
+  }
+  }
+}
+
 //Esta function para el circulo de x. y
 function drawBall() {
   context.beginPath();
@@ -59,6 +84,9 @@ function drawBall() {
 
 function draw() {
   context.clearRect(0, 0, canvas.width, canvas.height);
+
+// se llama ala funcion de dibujar los bloques
+ drawBricks();
 
   //se llama la function de dibujar un circulo
   drawBall();
@@ -77,10 +105,11 @@ function draw() {
   } else if (y + dy > canvas.height -ballRadius) {
     if (x > paddleX && paddleX + paddleWidth) {
     dy = -dy ;
-  } else  {
-   alert("Moriste");
-   document.location.reload();
   }
+  // else  {
+  //  alert("Moriste");
+  //  document.location.reload();
+  // }
 
   }
 
