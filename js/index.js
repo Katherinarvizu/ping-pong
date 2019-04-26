@@ -25,6 +25,15 @@ var brickPadding = 10;
 var brickOffsetTop = 30;
 var brickOffsetLeft = 30;
 
+var bloques = [];
+
+for (var fila = 0; fila <brickRowCount ; fila++) {
+    bloques[fila] = [];
+  for (var columna = 0; columna < brickColumnCount ; columna++) {
+    bloques[fila][columna] = {x: 0, y: 0, status: 1};
+  }
+}
+
 //agregar eventos de precionado y soltado de teclas
 document.addEventListener("keydown", keyDownHandler, false);
 document.addEventListener("keyup", keyUpHandler, false);
@@ -59,20 +68,29 @@ function drawPaddle() {
 function drawBricks(){
   for (var row = 0; row < brickRowCount; row++) {
     for (var column = 0; column < brickColumnCount; column++) {
-    var brickX = (column*(brickWidth + brickPadding)) + brickOffsetLeft;
-    var brickY  = (row*(brickHeight + brickPadding)) + brickOffsetTop;
+    var bloque = bloques[row][column];
 
-    // dibujar un bloque
+    if (bloque.status == 1) {
+      var brickX = (column*(brickWidth + brickPadding)) + brickOffsetLeft;
+      var brickY  = (row*(brickHeight + brickPadding)) + brickOffsetTop;
 
-    context.beginPath();
-    context.rect(brickX, brickY, brickWidth, brickHeight);
-    context.fillStyle = "#0095DD";
-    context.fill();
-    context.closePath();
+      bloque.x = brickX;
+      bloque.y = brickY;
+
+      // dibujar un bloque
+      drawBrick(brickX, brickY);
+    }
   }
   }
 }
 
+function drawBrick(brickX, brickY){
+  context.beginPath();
+  context.rect(brickX, brickY, brickWidth, brickHeight);
+  context.fillStyle = "#0095DD";
+  context.fill();
+  context.closePath();
+}
 //Esta function para el circulo de x. y
 function drawBall() {
   context.beginPath();
@@ -82,9 +100,25 @@ function drawBall() {
   context.closePath();
 }
 
+function detecterUnChoque(){
+  for (var row = 0; row < brickRowCount; row++) {
+    for (var column = 0; column < brickColumnCount; column++) {
+      var bloque = bloques[row][column];
+
+      if (
+        x > bloque.x &&
+        x < bloque.x + brickWidth &&
+        y > bloque.y &&
+        y < bloque.y + brickHeight) {
+          dy = -dy;
+          bloque.status = 0;
+      }
+    }
+  }
+}
+
 function draw() {
   context.clearRect(0, 0, canvas.width, canvas.height);
-
 // se llama ala funcion de dibujar los bloques
  drawBricks();
 
@@ -93,6 +127,9 @@ function draw() {
 
   //se llama la funcion de dibujar una paleta
   drawPaddle();
+
+  //se llama esta funtión para una colicion
+  detecterUnChoque();
 
   //verificar si llego al limite de la izquierda/derecho.
   if (x + dx > canvas.width - ballRadius || x + dx < ballRadius) {
